@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.*; // AssertJ
 // Auditing Test 를 위해 import
 @Import(JpaConfig.class)
 @DataJpaTest // 생성자 주입, @Transactional 등
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // 테스트 DB 로 바꾸지 않고 설정 값을 사용
 class JpaRepositoryTest {
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;

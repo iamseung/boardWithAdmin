@@ -22,11 +22,9 @@ import java.util.*;
         @Index(columnList = "createdAt"),
         @Index(columnList = "modifiedAt")
 })
-// EntityListener 란 Entity가 삽입, 삭제, 수정, 조회 등의 작업을 할 때 전, 후에
-// 어떠한 작업을 하기 위해 이벤트 처리를 위한 어노테이션
-@EntityListeners(AuditingEntityListener.class)
+
 @Entity
-public class Article {
+public class Article extends AuditingFields {
     // MySQL의 AUTO INCREMENT 는 IDENTITY 방식
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,12 +40,6 @@ public class Article {
     @OrderBy("id") // 정렬 기준
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
-
-    // meta Data
-    @CreatedDate @Column(nullable = false) private LocalDateTime createdAt;             // 생성일시
-    @CreatedBy @Column(nullable = false, length = 100)private String createdBy;         // 생성자
-    @LastModifiedDate @Column(nullable = false) private LocalDateTime modifiedAt;       // 수정일시
-    @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy;  // 수정자
 
     // 엔티티는 생성자를 가지고 있어야 함,
     // 평소에 오픈하지 않을 것을 의미
