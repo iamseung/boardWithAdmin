@@ -1,0 +1,44 @@
+debug: false
+management.endpoints.web.exposure.include: "*"
+
+logging:
+  level:
+    hello.core: debug
+    org.springframework.web.servlet: debug
+    # jpa's query log ? ?? debug, ??? ???? ??
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/board
+    username: seungseok
+    password: Wlqdprkwk!23
+    # 8??? ???? ????
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    # ???? ?????? ?? ??
+    defer-datasource-initialization: true
+    # ???? ddl ??
+    hibernate.ddl-auto: create
+    show-sql: true
+    properties:
+      # sql ? ??? ??
+      hibernate.format_sql: true
+      # ?? 100 ?? bulk select
+      hibernate.default_batch_fetch_size: 100
+  sql:
+    init:
+      mode: always
+  data.rest:
+    base-path: /api
+    detection-strategy: annotated
+  h2:
+    console:
+      enabled: true
+
+#---
+#
+#spring:
+#  config:
+#    activate:
+#      on-profile: testdb
