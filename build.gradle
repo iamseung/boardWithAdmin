@@ -53,7 +53,6 @@ tasks.named('test') {
 }
 
 // Querydsl 설정부
-// Qclass 생성 위가
 def generated = 'src/main/generated'
 
 // querydsl QClass 파일 생성 위치를 지정
