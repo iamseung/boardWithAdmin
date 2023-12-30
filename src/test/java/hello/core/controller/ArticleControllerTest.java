@@ -28,7 +28,7 @@ class ArticleControllerTest {
     void givenNothing_whenRequestingArticlesView_thenReturnArticlesView1() throws Exception {
         mvc.perform(get("/articles"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML)) // 호환되는 타입까지 전부
                 .andExpect(view().name("articles/index"))
                 .andExpect(model().attributeExists("aritcles")); // key 가 있는지 검사
     }

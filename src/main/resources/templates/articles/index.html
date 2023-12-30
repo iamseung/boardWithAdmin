@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 페이지</title>
+</head>
+
+<body>
+    <header>
+        header 삽입부
+        <hr>
+    </header>
+
+    <main>
+        <form>
+            <label for="search-type" hidden>검색 유형</label>
+            <select class="form-control" id="search-type" name="searchType">
+                <option>제목</option>
+                <option>본문</option>
+                <option>id</option>
+                <option>닉네임</option>
+                <option>해시태그</option>
+            </select>
+            <label for="search-value" hidden>검색어</label>
+            <input type="text" placeholder="검색어..." class="form-control" id="search-value" name="searchValue">
+            <button type="submit">버튼</button>
+        </form>
+
+        <table class="table" id="article-table">
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>해시태그</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="title"><a>첫글</a></td>
+                    <td class="hashtag"><span class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></td>
+                    <td class="user-id">Uno</td>
+                    <td class="created-at"><time>2022-01-01</time></td>
+                </tr>
+                <tr>
+                    <td>두번째글</td>
+                    <td>#spring</td>
+                    <td>Uno</td>
+                    <td><time>2022-01-02</time></td>
+                </tr>
+                <tr>
+                    <td>세번째글</td>
+                    <td>#java</td>
+                    <td>Uno</td>
+                    <td><time>2022-01-03</time></td>
+                </tr>
+            </tbody>
+        </table>
+
+        네비게이션 바
+    </main>
+
+    <footer>
+        <hr>
+    </footer>
+
+</body>
+</html>
