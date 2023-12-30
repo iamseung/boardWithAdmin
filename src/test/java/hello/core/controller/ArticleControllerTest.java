@@ -30,7 +30,7 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML)) // 호환되는 타입까지 전부
                 .andExpect(view().name("articles/index"))
-                .andExpect(model().attributeExists("aritcles")); // key 가 있는지 검사
+                .andExpect(model().attributeExists("articles")); // key 가 있는지 검사
     }
 
     @Disabled("구현 중")
@@ -41,8 +41,8 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/detail"))
-                .andExpect(model().attributeExists("aritcleComment"))
-                .andExpect(model().attributeExists("aritcles")); // key 가 있는지 검사
+                .andExpect(model().attributeExists("articleComments"))
+                .andExpect(model().attributeExists("article")); // key 가 있는지 검사
     }
 
     @Disabled("구현 중")
