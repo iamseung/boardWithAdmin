@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 // 어떠한 작업을 하기 위해 이벤트 처리를 위한 어노테이션
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class AuditingFields {
+public abstract class AuditingFields {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
     @Column(nullable = false, updatable = false)
