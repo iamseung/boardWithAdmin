@@ -30,3 +30,6 @@ spring:
   data.rest:
     base-path: /api
     detection-strategy: annotated
+  # ThymeleafConfig.java
+  thymeleaf3:
+    decoupled-logic: true
