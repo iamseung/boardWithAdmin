@@ -1,10 +1,12 @@
 package hello.core.controller;
 
+import hello.core.config.SecurityConfig;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -12,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("View 컨트롤러 - 게시판")
+@Import(SecurityConfig.class)
 // 대상, ArticleController 컨트롤러만 빈으로 읽어들여 테스트 진행
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
@@ -22,7 +25,7 @@ class ArticleControllerTest {
     }
 
     // jUnit5, 테스트 제외 어노테이션
-    @Disabled("구현 중")
+//    @Disabled("구현 중")
     @DisplayName("[view] [GET] 게시글 리스트")
     @Test
     void givenNothing_whenRequestingArticlesView_thenReturnArticlesView1() throws Exception {
@@ -33,7 +36,7 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("articles")); // key 가 있는지 검사
     }
 
-    @Disabled("구현 중")
+//    @Disabled("구현 중")
     @DisplayName("[view] [GET] 게시글 상세 페이지 - 정상 호출")
     @Test
     void givenNothing_whenRequestingArticlesView_thenReturnArticlesView2() throws Exception {
