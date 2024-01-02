@@ -24,6 +24,10 @@ public class ArticleController {
         return "articles/index";
     }
 
+    /*
+    @PathVariable
+    : api/articles/{{articleId}}
+    */
     @GetMapping("/{articleId}")
     public String article(@PathVariable Long articleId, ModelMap map) {
         map.addAttribute("article", "article");
