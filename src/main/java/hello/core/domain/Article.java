@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
 // INDEX 전략
 @Table(indexes = {
         @Index(columnList = "title"),
@@ -24,6 +24,11 @@ public class Article extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
+    @JoinColumn(name = "userId")
+    @ManyToOne(optional = false)
+    private UserAccount userAccount; // 유저 정보 (ID)
+
     @Setter @Column(nullable = false) private String title;       // 제목
     @Setter @Column(nullable = false, length = 10000) private String content;     // 내용
 
@@ -31,7 +36,7 @@ public class Article extends AuditingFields {
 
     // 양방향 바인딩
     @ToString.Exclude // 순환 참조!
-    @OrderBy("id") // 정렬 기준
+    @OrderBy("createdAt DESC") // 정렬 기준
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
@@ -39,15 +44,16 @@ public class Article extends AuditingFields {
     // 평소에 오픈하지 않을 것을 의미
     protected Article() {}
 
-    private Article(String title, String content, String hashtag) {
+    private Article(UserAccount userAccount, String title, String content, String hashtag) {
+        this.userAccount = userAccount;
         this.title = title;
         this.content = content;
         this.hashtag = hashtag;
     }
 
     // Factory Mehtod
-    public static Article of(String title, String content, String hashtag) {
-        return new Article(title, content, hashtag);
+    public static Article of(UserAccount userAccount, String title, String content, String hashtag) {
+        return new Article(userAccount, title, content, hashtag);
     }
 
     @Override
