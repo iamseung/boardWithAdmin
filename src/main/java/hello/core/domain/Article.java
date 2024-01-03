@@ -25,9 +25,9 @@ public class Article extends AuditingFields {
     private Long id;
 
     @Setter
-    @JoinColumn(name = "userId")
     @ManyToOne(optional = false)
-    private UserAccount userAccount; // 유저 정보 (ID)
+    //    @JoinColumn(name = "userId")
+    private UserAccount userAccount; // 유저 정보 (ID), DB 명 = user_account_id
 
     @Setter @Column(nullable = false) private String title;       // 제목
     @Setter @Column(nullable = false, length = 10000) private String content;     // 내용
