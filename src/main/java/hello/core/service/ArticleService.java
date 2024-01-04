@@ -19,6 +19,10 @@ public class ArticleService {
     // 읽기 전용
     @Transactional(readOnly = true)
     public Page<ArticleDto> searchArticles(SearchType searchType, String searchKeyword, Pageable pageable) {
+        if(searchKeyword == null || searchKeyword.isBlank()) {
+            // page 안의 내용을 형변환
+            return articleRepository.findAll(pageable).map(ArticleDto::from);
+        }
         return Page.empty();
     }
 
