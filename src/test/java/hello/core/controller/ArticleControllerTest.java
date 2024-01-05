@@ -1,15 +1,23 @@
 package hello.core.controller;
 
 import hello.core.config.SecurityConfig;
+import hello.core.service.ArticleService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -20,20 +28,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ArticleControllerTest {
     private final MockMvc mvc;
 
+    @MockBean private ArticleService articleService;
+
     public ArticleControllerTest(@Autowired MockMvc mockMvc) {
         this.mvc = mockMvc;
     }
 
     // jUnit5, 테스트 제외 어노테이션
 //    @Disabled("구현 중")
-    @DisplayName("[view] [GET] 게시글 리스트")
+    @DisplayName("[view] [GET] 게시글 리스트 {게시판 페이지 - 정상 호출}")
     @Test
     void givenNothing_whenRequestingArticlesView_thenReturnArticlesView1() throws Exception {
+        given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class))).willReturn(Page.empty());
         mvc.perform(get("/articles"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML)) // 호환되는 타입까지 전부
                 .andExpect(view().name("articles/index"))
                 .andExpect(model().attributeExists("articles")); // key 가 있는지 검사
+        then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
     }
 
 //    @Disabled("구현 중")

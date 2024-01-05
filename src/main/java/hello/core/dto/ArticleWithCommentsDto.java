@@ -8,8 +8,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * DTO for {@link ArticleComment}
+/*
+Article 과 ArticleComment 를 모두 가진 Dto
  */
 public record ArticleWithCommentsDto(
         Long id,

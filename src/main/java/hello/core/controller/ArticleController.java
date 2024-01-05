@@ -1,6 +1,9 @@
 package hello.core.controller;
 
 import hello.core.repository.ArticleRepository;
+import hello.core.service.ArticleService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +18,12 @@ import java.util.List;
     /articles/search
     /articles/search-hashtag
  */
+@RequiredArgsConstructor
 @RequestMapping("/articles")
 @Controller
 public class ArticleController {
 
-    private final ArticleRepository articleRepository;
-
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
+    private final ArticleService articleService;
 
     @GetMapping
     public String articles(ModelMap map) {
@@ -37,7 +37,7 @@ public class ArticleController {
     */
     @GetMapping("/{articleId}")
     public String article(@PathVariable Long articleId, ModelMap map) {
-        map.addAttribute("article", articleRepository.findById(articleId));
+        map.addAttribute("article", "article");
         map.addAttribute("articleComments", List.of());
         return "articles/detail";
     }
