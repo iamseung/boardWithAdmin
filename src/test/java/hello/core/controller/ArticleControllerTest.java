@@ -1,6 +1,8 @@
 package hello.core.controller;
 
 import hello.core.config.SecurityConfig;
+import hello.core.dto.ArticleWithCommentsDto;
+import hello.core.dto.UserAccountDto;
 import hello.core.service.ArticleService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -40,6 +45,7 @@ class ArticleControllerTest {
     @Test
     void givenNothing_whenRequestingArticlesView_thenReturnArticlesView1() throws Exception {
         given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class))).willReturn(Page.empty());
+
         mvc.perform(get("/articles"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML)) // 호환되는 타입까지 전부
@@ -52,12 +58,18 @@ class ArticleControllerTest {
     @DisplayName("[view] [GET] 게시글 상세 페이지 - 정상 호출")
     @Test
     void givenNothing_whenRequestingArticlesView_thenReturnArticlesView2() throws Exception {
+        // Given
+        Long articleId = 1L;
+        given(articleService.getArticle(articleId)).willReturn(createArticleWithCommentsDto());
+
         mvc.perform(get("/articles/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("articleComments"))
                 .andExpect(model().attributeExists("article")); // key 가 있는지 검사
+
+        then(articleService).should().getArticle(articleId);
     }
 
     @Disabled("구현 중")
@@ -77,5 +89,35 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("articles/search"))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
+    }
+
+    public ArticleWithCommentsDto createArticleWithCommentsDto() {
+        return ArticleWithCommentsDto.of(
+                1L,
+                createUserAccountDto(),
+                Set.of(),
+                "title",
+                "content",
+                "#java",
+                LocalDateTime.now(),
+                "seungseok",
+                LocalDateTime.now(),
+                "seungseok"
+        );
+    }
+
+    public UserAccountDto createUserAccountDto() {
+        return UserAccountDto.of(
+                1L,
+                "seungseok",
+                "pw",
+                "seungseok@naver.com",
+                "seungseok",
+                "memo",
+                LocalDateTime.now(),
+                "seungseok",
+                LocalDateTime.now(),
+                "seungsoek"
+        );
     }
 }
