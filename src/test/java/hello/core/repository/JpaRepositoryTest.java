@@ -49,12 +49,12 @@ class JpaRepositoryTest {
                 .hasSize(123);
     }
 
-    @DisplayName("insert 테스트")
+    @DisplayName("insert 테스트, userId는 unique Key 이기 때문에 중복을 허용하지 않는다")
     @Test
     void givenTestData_whenInserting_thenWorksFine() {
         // Given
         long previousCount = articleRepository.count();
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of("uno", "pw", null, null, null));
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("seungseok", "pw", null, null, null));
         Article article = Article.of(userAccount, "new article", "new content", "#spring");
 
         // When
