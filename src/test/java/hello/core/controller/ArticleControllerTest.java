@@ -1,6 +1,7 @@
 package hello.core.controller;
 
 import hello.core.config.SecurityConfig;
+import hello.core.domain.type.SearchType;
 import hello.core.dto.ArticleWithCommentsDto;
 import hello.core.dto.UserAccountDto;
 import hello.core.service.ArticleService;
@@ -45,19 +46,29 @@ class ArticleControllerTest {
 
     // jUnit5, 테스트 제외 어노테이션
     // @Disabled("구현 중")
-    @DisplayName("[view] [GET] 게시글 리스트 {게시판 페이지 - 정상 호출}")
+    @DisplayName("[view] [GET] 게시글 리스트 {게시판} 페이지 - 검색어와 함께 호출")
     @Test
     void givenNothing_whenRequestingArticlesView_thenReturnArticlesView1() throws Exception {
-        given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class))).willReturn(Page.empty());
+        // Given
+        SearchType searchType = SearchType.TITLE;
+        String searchValue = "title";
+
+        given(articleService.searchArticles(eq(searchType), eq(searchValue), any(Pageable.class))).willReturn(Page.empty());
         given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0,1,2,3,4));
 
-        mvc.perform(get("/articles"))
+        // When & then
+        mvc.perform(
+                get("/articles")
+                    .queryParam("searchType", searchType.name())
+                    .queryParam("searchValue", searchValue)
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML)) // 호환되는 타입까지 전부
                 .andExpect(view().name("articles/index"))
-                .andExpect(model().attributeExists("paginationBarNumbers"))
+//                .andExpect(model().attributeExists("paginationBarNumbers"))
+                .andExpect(model().attributeExists("searchTypes"))
                 .andExpect(model().attributeExists("articles")); // key 가 있는지 검사
-        then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
+        then(articleService).should().searchArticles(eq(searchType), eq(searchValue), any(Pageable.class));
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
