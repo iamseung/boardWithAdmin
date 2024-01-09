@@ -53,8 +53,8 @@ public class ArticleController {
     }
 
     /*
-    @PathVariabl
-    : api/articles/{{articleId}}
+    @PathVariable
+    : api/articles/{{articleId}} 와 같이 값 전달 가능
     */
     @GetMapping("/{articleId}")
     public String article(@PathVariable Long articleId, ModelMap map) {
