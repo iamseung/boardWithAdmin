@@ -183,7 +183,6 @@ class ArticleControllerTest {
 
     public UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-                1L,
                 "seungseok",
                 "pw",
                 "seungseok@naver.com",
