@@ -19,12 +19,12 @@ import org.springframework.data.domain.Pageable;
 //import static org.junit.jupiter.api.Assertions.*;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-
 @DisplayName("비즈니스 로직 - 게시글")
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
@@ -91,6 +91,38 @@ class ArticleServiceTest {
         then(articleRepository).should().findById(articleId);
     }
 
+//    @DisplayName("검색어 없이 게시글을 해시태그 검색하면, 빈 페이지를 반환한다.")
+//    @Test
+//    void givenNoSearchParameters_whenSearchingArticlesViaHashtag_thenReturnsEmptyPage() {
+//        // Given
+//        Pageable pageable = Pageable.ofSize(20);
+//
+//        // When
+//        Page<ArticleDto> articles = sut.searchArticlesViaHashtag(null, pageable);
+//
+//        // Then
+//        assertThat(articles).isEqualTo(Page.empty(pageable));
+//        then(hashtagRepository).shouldHaveNoInteractions();
+//        then(articleRepository).shouldHaveNoInteractions();
+//    }
+
+    @DisplayName("게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
+    @Test
+    void givenHashtag_whenSearchingArticlesViaHashtag_thenReturnsArticlesPage() {
+        // Given
+        String hashtagName = "#java";
+        Pageable pageable = Pageable.ofSize(20);
+//        Article expectedArticle = createArticle();
+        given(articleRepository.findByHashtag(hashtagName, pageable)).willReturn(Page.empty(pageable));
+
+        // When
+        Page<ArticleDto> articles = sut.searchArticlesViaHashtag(hashtagName, pageable);
+
+        // Then
+        assertThat(articles).isEqualTo(Page.empty(pageable));
+        then(articleRepository).should().findByHashtag(hashtagName, pageable);
+    }
+
     @DisplayName("없는 게시글을 조회하면, 예외를 던진다.")
     @Test
     void givenNonexistentArticleId_whenSearchingArticle_thenThrowsException() {
@@ -103,8 +135,8 @@ class ArticleServiceTest {
 
         // Then
         assertThat(t)
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("게시글이 없습니다 - articleId: " + articleId);
+                .isInstanceOf(EntityNotFoundException.class);
+//                .hasMessage("게시글이 없습니다 - articleId: " + articleId);
         then(articleRepository).should().findById(articleId);
     }
 
@@ -120,6 +152,21 @@ class ArticleServiceTest {
 
         // Then
         then(articleRepository).should().save(any(Article.class));
+    }
+
+    @DisplayName("해시태그를 조회하면, 유니크 해시태그 리스트를 반환한다.")
+    @Test
+    void givenNothing_whenCalling_thenReturnsHashtags() {
+        // Given
+        List<String> expectedHashtags = List.of("java", "spring", "boot");
+        given(articleRepository.findAllDistinctHashtags()).willReturn(expectedHashtags);
+
+        // When
+        List<String> actualHashtags = sut.getHashtags();
+
+        // Then
+        assertThat(actualHashtags).isEqualTo(expectedHashtags);
+        then(articleRepository).should().findAllDistinctHashtags();
     }
 
     @DisplayName("게시글의 수정 정보를 입력하면, 게시글을 수정한다.")

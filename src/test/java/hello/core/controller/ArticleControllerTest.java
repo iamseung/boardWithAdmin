@@ -32,8 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("View 컨트롤러 - 게시판")
 @Import(SecurityConfig.class)
-// 대상, ArticleController 컨트롤러만 빈으로 읽어들여 테스트 진행
-@WebMvcTest(ArticleController.class)
+@WebMvcTest(ArticleController.class) // 대상, ArticleController 컨트롤러만 빈으로 읽어들여 테스트 진행
 class ArticleControllerTest {
     private final MockMvc mvc;
 
@@ -128,14 +127,43 @@ class ArticleControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
     }
 
-    @Disabled("구현 중")
-    @DisplayName("[view] [GET] 게시글 해시태그 전용 페이지 - 정상 호출")
+    @DisplayName("[view] [GET] 게시글 해시태그 검색 페이지 - 정상 호출")
     @Test
     void givenNothing_whenRequestingArticlesHashTagSearchView_thenReturnArticlesHashTagSearchView() throws Exception {
+        // Given
+        given(articleService.searchArticlesViaHashtag(eq(null), any(Pageable.class))).willReturn(Page.empty());
+
+        // When & Then
         mvc.perform(get("/articles/search-hashtag"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("articles/search"))
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
+                .andExpect(view().name("articles/search-hashtag"))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(model().attribute("articles", Page.empty()))
+                .andExpect(model().attributeExists("hashtags"))
+                .andExpect(model().attributeExists("paginationBarNumbers"))
+                .andExpect(model().attribute("searchTpye", SearchType.HASHTAG));
+        then(articleService).should().searchArticlesViaHashtag(eq(null), any(Pageable.class));
+    }
+
+    @DisplayName("[view] [GET] 게시글 해시태그 검색 페이지 - 정상 호출, 해시태그 입력")
+    @Test
+    void givenHashtag_whenRequestingArticlesHashTagSearchView_thenReturnArticlesHashTagSearchView() throws Exception {
+        // Given
+        String hashtag = "#java";
+        given(articleService.searchArticlesViaHashtag(eq(hashtag), any(Pageable.class))).willReturn(Page.empty());
+
+        // When & Then
+        mvc.perform(
+                get("/articles/search-hashtag")
+                        .queryParam("searchValue", hashtag)
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("articles/search-hashtag"))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(model().attribute("articles", Page.empty()))
+                .andExpect(model().attributeExists("hashtags"))
+                .andExpect(model().attributeExists("paginationBarNumbers"));
+        then(articleService).should().searchArticlesViaHashtag(eq(hashtag), any(Pageable.class));
     }
 
     public ArticleWithCommentsDto createArticleWithCommentsDto() {
