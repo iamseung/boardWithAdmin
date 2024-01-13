@@ -1,4 +1,4 @@
-package hello.core.domain.type;
+package hello.core.domain.constant;
 
 import lombok.Getter;
 

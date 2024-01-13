@@ -1,10 +1,12 @@
 package hello.core.service;
 
 import hello.core.domain.Article;
-import hello.core.domain.type.SearchType;
+import hello.core.domain.UserAccount;
+import hello.core.domain.constant.SearchType;
 import hello.core.dto.ArticleDto;
 import hello.core.dto.ArticleWithCommentsDto;
 import hello.core.repository.ArticleRepository;
+import hello.core.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j // logging
 @RequiredArgsConstructor
@@ -22,7 +23,9 @@ import java.util.Optional;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final UserAccountRepository userAccountRepository;
 
+    // 게시글 검색, 필터 적용까지 구현
     // 읽기 전용
     @Transactional(readOnly = true)
     public Page<ArticleDto> searchArticles(SearchType searchType, String searchKeyword, Pageable pageable) {
@@ -41,29 +44,30 @@ public class ArticleService {
         };
     }
 
+    // 게시글 검색, 댓글까지
     @Transactional(readOnly = true)
-    public ArticleWithCommentsDto getArticle(Long articleId) {
+    public ArticleWithCommentsDto getArticleWithComments(Long articleId) {
         return articleRepository.findById(articleId)
                 .map(ArticleWithCommentsDto::from)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: "));
     }
 
+    // 게시글 저장
     public void saveArticle(ArticleDto dto) {
-        articleRepository.save(dto.toEntity());
+        UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
+        articleRepository.save(dto.toEntity(userAccount));
     }
 
-    public void updateArticle(ArticleDto dto) {
+    public void updateArticle(Long articleId, ArticleDto dto) {
         try {
             // findById 는 SELECT 쿼리가 발생하기 때문에 레퍼런스만 가져오는 getReferenceById 사용
-            Article article = articleRepository.getReferenceById(dto.id());
+            Article article = articleRepository.getReferenceById(articleId);
 
             // java 13,14 부터 enum 타입은 get,set 을 자동으로 사용하기 때문에 아래와 같이 표기
             if(dto.title() != null) { article.setTitle(dto.title()); };
             if(dto.content() != null) { article.setContent(dto.content()); };
             article.setHashtag(dto.hashtag());
-
             // 트랜잭션 안에서 변경 감지로 save 생략
-            // articleRepository.save(article);
         } catch (EntityNotFoundException e) {
             log.warn("게시글 업데이트 실패, 게시글을 찾을 수 없습니다 -dto : {}", dto);
         }
@@ -85,5 +89,16 @@ public class ArticleService {
 
     public List<String> getHashtags() {
         return articleRepository.findAllDistinctHashtags();
+    }
+
+    @Transactional(readOnly = true)
+    public ArticleDto getArticle(Long articleId) {
+        return articleRepository.findById(articleId)
+                .map(ArticleDto::from)
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " + articleId));
+    }
+
+    public long getArticleCount() {
+        return articleRepository.count();
     }
 }
