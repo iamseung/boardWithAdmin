@@ -33,6 +33,10 @@ public class ArticleController {
     private final ArticleService articleService;
     private final PaginationService paginationService;
 
+    /*
+        [게시글 전체 조회]
+        Paging + 검색 기능
+     */
     @GetMapping
     public String articles(
             @RequestParam(required = false) SearchType searchType,
@@ -53,8 +57,7 @@ public class ArticleController {
     }
 
     /*
-    @PathVariable
-    : api/articles/{{articleId}} 와 같이 값 전달 가능
+    [게시글 상세]
     */
     @GetMapping("/{articleId}")
     public String article(@PathVariable Long articleId, ModelMap map) {
@@ -65,6 +68,10 @@ public class ArticleController {
         return "articles/detail";
     }
 
+    /*
+    [해시태그 검색 페이지]
+    => Paging + 특정 해시태그 검색 기능
+    */
     @GetMapping("/search-hashtag")
     public String searchArticleHashtag(
             @RequestParam(required = false) String searchValue,
@@ -83,7 +90,9 @@ public class ArticleController {
         return "articles/search-hashtag";
     }
 
-    // 게시글 입력 폼
+    /*
+    [게시글 입력 - 폼]
+     */
     @GetMapping("/form")
     public String articleForm(ModelMap map) {
         map.addAttribute("formStatus", FormStatus.CREATE);
@@ -91,7 +100,9 @@ public class ArticleController {
         return "articles/form";
     }
 
-    // 게시글 입력 구현
+    /*
+    [게시글 입력 - 기능]
+     */
     @PostMapping("/form")
     public String postNewArticle(ArticleRequest articleRequest) {
         // TODO: 인증 정보를 넣어줘야 한다.
@@ -102,6 +113,9 @@ public class ArticleController {
         return "redirect:/articles";
     }
 
+    /*
+    [게시글 수정 - 폼]
+     */
     @GetMapping("/{articleId}/form")
     public String updateArticleForm(@PathVariable Long articleId, ModelMap map) {
         ArticleResponse article = ArticleResponse.from(articleService.getArticle(articleId));
@@ -112,6 +126,9 @@ public class ArticleController {
         return "articles/form";
     }
 
+    /*
+    [게시글 수정 - 기능]
+     */
     @PostMapping ("/{articleId}/form")
     public String updateArticle(@PathVariable Long articleId, ArticleRequest articleRequest) {
         // TODO: 인증 정보를 넣어줘야 한다.
@@ -122,6 +139,9 @@ public class ArticleController {
         return "redirect:/articles/" + articleId;
     }
 
+    /*
+    [게시글 삭제]
+     */
     @PostMapping("{articleId}/delete")
     public String deleteArticle(@PathVariable Long articleId) {
         // TODO: 인증 정보를 넣어줘야 한다.
