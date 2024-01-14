@@ -61,6 +61,7 @@ public class ArticleController {
         ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.getArticleWithComments(articleId));
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentResponses());
+        map.addAttribute("totalCount", articleService.getArticleCount());
         return "articles/detail";
     }
 
@@ -87,7 +88,7 @@ public class ArticleController {
     public String articleForm(ModelMap map) {
         map.addAttribute("formStatus", FormStatus.CREATE);
 
-        return "article/form";
+        return "articles/form";
     }
 
     // 게시글 입력 구현
@@ -109,5 +110,23 @@ public class ArticleController {
         map.addAttribute("formStatus", FormStatus.UPDATE);
 
         return "articles/form";
+    }
+
+    @PostMapping ("/{articleId}/form")
+    public String updateArticle(@PathVariable Long articleId, ArticleRequest articleRequest) {
+        // TODO: 인증 정보를 넣어줘야 한다.
+        articleService.updateArticle(articleId, articleRequest.toDto(UserAccountDto.of(
+                "uno", "asdf1234", "uno@mail.com", "Uno", "memo", null, null, null, null
+        )));
+
+        return "redirect:/articles/" + articleId;
+    }
+
+    @PostMapping("{articleId}/delete")
+    public String deleteArticle(@PathVariable Long articleId) {
+        // TODO: 인증 정보를 넣어줘야 한다.
+        articleService.deleteArticle(articleId);
+
+        return "redirect:/articles";
     }
 }
