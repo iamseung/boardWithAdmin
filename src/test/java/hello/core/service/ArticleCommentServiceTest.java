@@ -7,6 +7,7 @@ import hello.core.dto.ArticleCommentDto;
 import hello.core.dto.UserAccountDto;
 import hello.core.repository.ArticleCommentRepository;
 import hello.core.repository.ArticleRepository;
+import hello.core.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,12 +25,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
 @DisplayName("비즈니스 로직 - 댓글")
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class) // jUnit 5
 class ArticleCommentServiceTest {
-    // @InjectMocks, 주입하는 대상
+    // @InjectMocks, 의존성이 필요한 대상에 사용
     @InjectMocks private ArticleCommentService sut; // System under Test
+
+    // @Mock, 모의 클래스 생성
     @Mock private ArticleCommentRepository articleCommentRepository;
     @Mock private ArticleRepository articleRepository;
+    @Mock private UserAccountRepository userAccountRepository;
 
     @DisplayName("게시글 ID로 조회하면, 해당하는 댓글 리스트를 반환한다.")
     @Test
@@ -55,6 +59,7 @@ class ArticleCommentServiceTest {
         // Given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
         given(articleRepository.getReferenceById(dto.articleId())).willReturn(createArticle());
+        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
         given(articleCommentRepository.save(any(ArticleComment.class))).willReturn(null);
 
         // When
@@ -62,6 +67,7 @@ class ArticleCommentServiceTest {
 
         // Then
         then(articleRepository).should().getReferenceById(dto.articleId());
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
         then(articleCommentRepository).should().save(any(ArticleComment.class));
     }
 
@@ -77,6 +83,7 @@ class ArticleCommentServiceTest {
 
         // Then
         then(articleRepository).should().getReferenceById(dto.articleId());
+        then(userAccountRepository).shouldHaveNoInteractions(); // 아무 반응 없음!
         then(articleCommentRepository).shouldHaveNoInteractions();
     }
 
