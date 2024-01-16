@@ -11,6 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
+/*
+엔티티 객체가 생성이 되거나 변경이 되었을 때 @EnableJpaAuditing 어노테이션을 활용하여 자동으로 값을 등록할 수 있습니다
+ */
 // JpaAuditing 기능 활성화
 @EnableJpaAuditing
 @Configuration
