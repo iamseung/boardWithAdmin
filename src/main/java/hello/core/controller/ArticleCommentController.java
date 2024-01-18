@@ -1,9 +1,10 @@
 package hello.core.controller;
 
-import hello.core.dto.UserAccountDto;
 import hello.core.dto.request.ArticleCommentRequest;
+import hello.core.dto.security.BoardPrincipal;
 import hello.core.service.ArticleCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,19 +18,23 @@ public class ArticleCommentController {
 
     // form 은 get & post 만 지원하기 때문에 아래와 같이 설계
     @PostMapping("/new")
-    public String postNewArticleComment(ArticleCommentRequest articleCommentRequest) {
+    public String postNewArticleComment(
+            ArticleCommentRequest articleCommentRequest,
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal
+    ) {
         // TODO: 인증 정보를 넣어줘야 한다.
-        articleCommentService.saveArticleComment(articleCommentRequest.toDto(UserAccountDto.of(
-                "uno", "pw", "seong-seok@naver.com", null, null
-        )));
+        articleCommentService.saveArticleComment(articleCommentRequest.toDto(boardPrincipal.toDto()));
 
         return "redirect:/articles/" + articleCommentRequest.articleId();
     }
 
     // articleId => callback url 유추
     @PostMapping("{commentId}/delete")
-    public String deleteArticleComment(@PathVariable Long commentId, Long articleId) {
-        articleCommentService.deleteArticleComment(commentId);
+    public String deleteArticleComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            Long articleId) {
+        articleCommentService.deleteArticleComment(commentId, boardPrincipal.getUsername());
 
         return "redirect:/articles/" + articleId;
     }
