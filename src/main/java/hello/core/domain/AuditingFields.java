@@ -28,13 +28,13 @@ public abstract class AuditingFields {
     private LocalDateTime createdAt;
 
     @CreatedBy
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, updatable = false, length = 100)
     // 생성자
     private String createdBy;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @LastModifiedDate
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     // 수정일시
     private LocalDateTime modifiedAt;
 
