@@ -36,7 +36,7 @@ public class SecurityConfig {
                                 HttpMethod.GET,
                                 "/",
                                 "/articles",
-                                "/articles-hashtag"
+                                "/articles/search-hashtag"
                         ).permitAll()
                         // 제외한 나머지 모두 인
                         .anyRequest().authenticated()

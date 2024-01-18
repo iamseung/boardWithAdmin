@@ -55,8 +55,8 @@ public record BoardPrincipal(
         );
     }
 
-    @Override public String getPassword() {return username;}
-    @Override public String getUsername() {return password;}
+    @Override public String getPassword() {return password;}
+    @Override public String getUsername() {return username;}
     @Override public Collection<? extends GrantedAuthority> getAuthorities() {return authorities;}
 
     @Override public boolean isAccountNonExpired() {return true;}
