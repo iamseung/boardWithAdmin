@@ -275,10 +275,10 @@ class ArticleServiceTest {
 
     private UserAccount createUserAccount() {
         return UserAccount.of(
-                "uno",
+                "seungseok",
                 "password",
-                "uno@email.com",
-                "Uno",
+                "seungseok@email.com",
+                "Seungseok",
                 null
         );
     }
@@ -303,22 +303,22 @@ class ArticleServiceTest {
                 content,
                 hashtag,
                 LocalDateTime.now(),
-                "Uno",
+                "Seungseok",
                 LocalDateTime.now(),
-                "Uno");
+                "Seungseok");
     }
 
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-                "uno",
+                "seungseok",
                 "password",
-                "uno@mail.com",
-                "Uno",
+                "seungseok@mail.com",
+                "Seungseok",
                 "This is memo",
                 LocalDateTime.now(),
-                "uno",
+                "seungseok",
                 LocalDateTime.now(),
-                "uno"
+                "seungseok"
         );
     }
 }
