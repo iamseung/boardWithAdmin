@@ -20,6 +20,7 @@ public interface ArticleCommentRepository extends
 
     List<ArticleComment> findByArticle_Id(Long articleId);
 
+    void deleteByIdAndUserAccount_UserId(Long articleCommentId, String userId);
     /*
         [검색에 대한 세부적인 규칙 재구성]
         interface 라 구현을 넣을 수 없는데 java8 이후로 가능

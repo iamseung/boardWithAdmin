@@ -49,7 +49,7 @@ public class ArticleService {
     public ArticleWithCommentsDto getArticleWithComments(Long articleId) {
         return articleRepository.findById(articleId)
                 .map(ArticleWithCommentsDto::from)
-                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: "));
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " +  articleId));
     }
 
     // 게시글 저장
@@ -62,20 +62,24 @@ public class ArticleService {
         try {
             // findById 는 SELECT 쿼리가 발생하기 때문에 레퍼런스만 가져오는 getReferenceById 사용
             Article article = articleRepository.getReferenceById(articleId);
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
 
-            // java 13,14 부터 enum 타입은 get,set 을 자동으로 사용하기 때문에 아래와 같이 표기
-            if(dto.title() != null) { article.setTitle(dto.title()); };
-            if(dto.content() != null) { article.setContent(dto.content()); };
-            article.setHashtag(dto.hashtag());
+            if(article.getUserAccount().equals(userAccount)) {
+                // java 13,14 부터 enum 타입은 get,set 을 자동으로 사용하기 때문에 아래와 같이 표기
+                if(dto.title() != null) { article.setTitle(dto.title()); };
+                if(dto.content() != null) { article.setContent(dto.content()); };
+                article.setHashtag(dto.hashtag());
+            }
+
             // 트랜잭션 안에서 변경 감지로 save 생략
         } catch (EntityNotFoundException e) {
-            log.warn("게시글 업데이트 실패, 게시글을 찾을 수 없습니다 -dto : {}", dto);
+            log.warn("게시글 업데이트 실패, 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 -dto : {}", e.getLocalizedMessage());
         }
 
     }
 
-    public void deleteArticle(long articleId) {
-        articleRepository.deleteById(articleId);
+    public void deleteArticle(long articleId, String userId) {
+        articleRepository.deleteByIdAndUserAccount_UserId(articleId, userId);
     }
 
     @Transactional(readOnly = true)

@@ -52,8 +52,8 @@
                 searchValue=${param.searchValue}
             )}"/>
         </attr>
-
-        <attr sel="#write-article" th:href="@{/articles/form}" />
+        <!--    인증했을 때만 글쓰기 활성화     -->
+        <attr sel="#write-article" sec:authorize="isAuthenticated()" th:href="@{/articles/form}" />
 
         <attr sel="#pagination">
             <attr sel="li[0]/a"
