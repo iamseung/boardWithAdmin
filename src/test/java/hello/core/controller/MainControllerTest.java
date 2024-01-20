@@ -1,6 +1,6 @@
 package hello.core.controller;
 
-import hello.core.config.SecurityConfig;
+import hello.core.config.TestSecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +10,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import(SecurityConfig.class)
+@DisplayName("View 루트 컨트롤러")
+@Import(TestSecurityConfig.class)
 @WebMvcTest(MainController.class)
 class MainControllerTest {
 
@@ -22,14 +23,16 @@ class MainControllerTest {
         this.mvc = mvc;
     }
 
+    @DisplayName("[view][GET] 루트 페이지 -> 게시글 리스트 (게시판) 페이지 Redirection")
     @Test
     void givenNothing_whenRequestingRootPage_thenRedirect() throws Exception {
         // Given
 
-        // When
-    	mvc.perform(get("/"))
-                .andExpect(status().is3xxRedirection());
-        // Then
+        // When & Then
+        mvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("forward:/articles"))
+                .andExpect(forwardedUrl("/articles"));
 
     }
 
