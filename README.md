@@ -33,4 +33,4 @@ Spring Boot
 * Heroku
 
 ## 데모 페이지
-http://boardwithss.com
+https://boardwithss-f08926a0dc6f.herokuapp.com
