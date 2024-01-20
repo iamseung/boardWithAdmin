@@ -4,10 +4,10 @@ Java 와 Spring Boot 를 사용하여 기본적인 게시판 기능을 구현했
 
 ## 개발 환경
 
-* Intellij IDEA Ultimate 2022.1.1 ~ 2022.1.3
+* Intellij IDEA Ultimate 
 * Java 17
 * Gradle 7.4.1
-* Spring Boot 2.7.0
+* Spring Boot 2.7.17
 
 ## 기술 세부 스택
 
@@ -33,4 +33,4 @@ Spring Boot
 * Heroku
 
 ## 데모 페이지
-
+http://boardwithss.com
