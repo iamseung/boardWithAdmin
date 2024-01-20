@@ -1,5 +1,6 @@
 package hello.core.controller;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     MockMvc는 웹 어플리케이션을 애플리케이션 서버에 배포하지 않고 테스트용 MVC환경을 만들어
     요청 및 전송, 응답기능을 제공해주는 유틸리티 클래스
  */
+@Disabled("Spring Data REST 통합테스트는 불필요하므로 제외시킴")
 @DisplayName("Data REST - API 테스트")
 @Transactional // 테스트에서 동작하는 트랜잭셔널의 기본 동작은 Rollback 을 위함
 @AutoConfigureMockMvc
