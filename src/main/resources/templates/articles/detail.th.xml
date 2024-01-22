@@ -17,6 +17,7 @@
             </attr>
         </attr>
 
+        <!-- 댓글 사용자의 정보-->
         <attr sel=".article-id" th:name="articleId" th:value="*{id}" />
         <attr sel="#comment-form" th:action="@{/comments/new}" th:method="post">
             <attr sel="#comment-textbox" th:name="content" />
