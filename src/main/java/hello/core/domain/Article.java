@@ -59,11 +59,8 @@ public class Article extends AuditingFields {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        // Pattern Variable
-        if (!(o instanceof Article article)) return false;
-//        return Objects.equals(id, article.id);
-        // 아직 영속화되지 않은 값은 일치하지 않는다고 간주한다는 의미
-        return this.getId() != null & this.getId().equals(article.id);
+        if (!(o instanceof Article that)) return false;
+        return this.getId() != null & this.getId().equals(that.getId());
     }
 
     @Override

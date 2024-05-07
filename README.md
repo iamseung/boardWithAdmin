@@ -32,5 +32,11 @@ Spring Boot
 * Bootstrap 5.2.0-Beta1
 * Heroku
 
+<<<<<<< HEAD
+=======
+## 정리 문서
+https://seung-seok.tistory.com/entry/SpringBoot-JPA-%EA%B2%8C%EC%8B%9C%ED%8C%90-%EC%A7%81%EC%A0%91-%EA%B5%AC%ED%98%84%ED%95%B4%EB%B3%B4%EA%B8%B0-1
+
+>>>>>>> master
 ## 데모 페이지
 https://boardwithss-f08926a0dc6f.herokuapp.com

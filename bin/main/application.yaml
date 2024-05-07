@@ -31,7 +31,7 @@ spring:
       mode: always
   data.rest:
     base-path: /api
-    detection-strategy: annotated # 어노테이션으로 지정한 것만을 노출
+    detection-strategy: annotated
   # ThymeleafConfig.java
   thymeleaf3:
     decoupled-logic: true

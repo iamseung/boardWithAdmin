@@ -111,6 +111,7 @@ class ArticleServiceTest {
     @Test
     void givenHashtag_whenSearchingArticlesViaHashtag_thenReturnsArticlesPage() {
         // Given
+        String K = Integer.toBinaryString(7);
         String hashtagName = "#java";
         Pageable pageable = Pageable.ofSize(20);
         given(articleRepository.findByHashtag(hashtagName, pageable)).willReturn(Page.empty(pageable));
