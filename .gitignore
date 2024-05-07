@@ -1,10 +1,7 @@
-# Project exclude paths
-#/.gradle/
-#/out/
-#/out/production/classes/
-
 # Created by https://www.toptal.com/developers/gitignore/api/java,gradle,intellij+all,windows,macos,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,gradle,intellij+all,windows,macos,visualstudiocode
+
+/bin/
 
 ### Querydsl
 /src/main/generated

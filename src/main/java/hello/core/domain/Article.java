@@ -60,7 +60,6 @@ public class Article extends AuditingFields {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Article that)) return false;
-        // 아직 영속화되지 않은 값은 일치하지 않는다고 간주한다는 의미
         return this.getId() != null & this.getId().equals(that.getId());
     }
 
