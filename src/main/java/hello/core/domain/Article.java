@@ -32,10 +32,17 @@ public class Article extends AuditingFields {
     @Setter @Column(nullable = false) private String title;       // 제목
     @Setter @Column(nullable = false, length = 10000) private String content;     // 내용
 
-    @Setter private String hashtag;     // 해시태그
+    @ToString.Exclude
+    @JoinTable(
+            name = "article_hashtag",
+            joinColumns = @JoinColumn(name = "articleId"),
+            inverseJoinColumns = @JoinColumn(name = "hashtagId")
+    )
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    protected Set<Hashtag> hashtags = new LinkedHashSet<>();
 
     // 양방향 바인딩
-    @ToString.Exclude // 순환 참조!
+    @ToString.Exclude // 순환 참조 방지
     @OrderBy("createdAt DESC") // 정렬 기준
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
@@ -44,16 +51,27 @@ public class Article extends AuditingFields {
     // 평소에 오픈하지 않을 것을 의미
     protected Article() {}
 
-    private Article(UserAccount userAccount, String title, String content, String hashtag) {
+    private Article(UserAccount userAccount, String title, String content) {
         this.userAccount = userAccount;
         this.title = title;
         this.content = content;
-        this.hashtag = hashtag;
     }
 
     // Factory Mehtod
-    public static Article of(UserAccount userAccount, String title, String content, String hashtag) {
-        return new Article(userAccount, title, content, hashtag);
+    public static Article of(UserAccount userAccount, String title, String content) {
+        return new Article(userAccount, title, content);
+    }
+
+    public void addHashtag(Hashtag hashtag) {
+        this.getHashtags().add(hashtag);
+    }
+
+    public void addHashtags(Collection<Hashtag> hashtags) {
+        this.getHashtags().addAll(hashtags);
+    }
+
+    public void  clearHashtags() {
+        this.getHashtags().clear();
     }
 
     @Override
