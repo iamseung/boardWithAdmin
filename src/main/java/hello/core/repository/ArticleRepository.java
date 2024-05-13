@@ -23,50 +23,25 @@ QuerydslBinderCustomizer
 @RepositoryRestResource
 public interface ArticleRepository extends
         JpaRepository<Article, Long>,
-        ArticleRepositoryCustom, // queryDsl
+        ArticleRepositoryCustom,
         QuerydslPredicateExecutor<Article>,
         QuerydslBinderCustomizer<QArticle> {
 
-    // Containing => 부분 검색
     Page<Article> findByTitleContaining(String title, Pageable pageable);
     Page<Article> findByContentContaining(String content, Pageable pageable);
     Page<Article> findByUserAccount_UserIdContaining(String userId, Pageable pageable);
     Page<Article> findByUserAccount_NicknameContaining(String nickname, Pageable pageable);
-    Page<Article> findByHashtag(String hashtag, Pageable pageable);
 
-    void deleteByIdAndUserAccount_UserId(Long articleId, String userId);
+    void deleteByIdAndUserAccount_UserId(Long articleId, String userid);
 
-    /*
-        [검색에 대한 세부적인 규칙 재구성]
-        interface 라 구현을 넣을 수 없는데 java8 이후로 가능
-        default 메서드로 변경
-     */
     @Override
     default void customize(QuerydslBindings bindings, QArticle root) {
-        // 리스팅을 하지 않은 프로퍼티는 검색에서 제외시키는 옵션
-        // default, false
         bindings.excludeUnlistedProperties(true);
-
-        // 해당 리스트를 검색에 포함
-        bindings.including(
-                root.title,
-                root.content,
-                root.hashtag,
-                root.createdAt,
-                root.createdBy)
-        ;
-
-        /*
-            [exact match rule 수정]
-            StringExpression::likeIgnoreCase
-            : like '${v}'
-            StringExpression::containsIgnoreCase
-            : like '%${v}%', 부분 검색
-         */
+        bindings.including(root.title, root.content, root.hashtags, root.createdAt, root.createdBy);
         bindings.bind(root.title).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.content).first(StringExpression::containsIgnoreCase);
-        bindings.bind(root.hashtag).first(StringExpression::containsIgnoreCase);
-        bindings.bind(root.createdAt).first(DateTimeExpression::eq); // 시분초까지 동일하게 입력
+        bindings.bind(root.hashtags.any().hashtagName).first(StringExpression::containsIgnoreCase);
+        bindings.bind(root.createdAt).first(DateTimeExpression::eq);
         bindings.bind(root.createdBy).first(StringExpression::containsIgnoreCase);
     }
 }
