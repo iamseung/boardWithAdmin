@@ -2,6 +2,7 @@ package hello.core.service;
 
 import hello.core.domain.Article;
 import hello.core.domain.ArticleComment;
+import hello.core.domain.Hashtag;
 import hello.core.domain.UserAccount;
 import hello.core.dto.ArticleCommentDto;
 import hello.core.dto.UserAccountDto;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,12 +29,11 @@ import static org.mockito.BDDMockito.*;
 @DisplayName("비즈니스 로직 - 댓글")
 @ExtendWith(MockitoExtension.class) // jUnit 5
 class ArticleCommentServiceTest {
-    // @InjectMocks, 의존성이 필요한 대상에 사용
-    @InjectMocks private ArticleCommentService sut; // System under Test
 
-    // @Mock, 모의 클래스 생성
-    @Mock private ArticleCommentRepository articleCommentRepository;
+    @InjectMocks private ArticleCommentService sut;
+
     @Mock private ArticleRepository articleRepository;
+    @Mock private ArticleCommentRepository articleCommentRepository;
     @Mock private UserAccountRepository userAccountRepository;
 
     @DisplayName("게시글 ID로 조회하면, 해당하는 댓글 리스트를 반환한다.")
@@ -83,7 +84,7 @@ class ArticleCommentServiceTest {
 
         // Then
         then(articleRepository).should().getReferenceById(dto.articleId());
-        then(userAccountRepository).shouldHaveNoInteractions(); // 아무 반응 없음!
+        then(userAccountRepository).shouldHaveNoInteractions();
         then(articleCommentRepository).shouldHaveNoInteractions();
     }
 
@@ -126,7 +127,7 @@ class ArticleCommentServiceTest {
     void givenArticleCommentId_whenDeletingArticleComment_thenDeletesArticleComment() {
         // Given
         Long articleCommentId = 1L;
-        String userId = "seungseok";
+        String userId = "uno";
         willDoNothing().given(articleCommentRepository).deleteByIdAndUserAccount_UserId(articleCommentId, userId);
 
         // When
@@ -144,29 +145,29 @@ class ArticleCommentServiceTest {
                 createUserAccountDto(),
                 content,
                 LocalDateTime.now(),
-                "seungseok",
+                "uno",
                 LocalDateTime.now(),
-                "seungseok"
+                "uno"
         );
     }
 
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-                "seungseok",
+                "uno",
                 "password",
-                "seungseok@mail.com",
-                "seungseok",
+                "uno@mail.com",
+                "Uno",
                 "This is memo",
                 LocalDateTime.now(),
-                "seungseok",
+                "uno",
                 LocalDateTime.now(),
-                "seungseok"
+                "uno"
         );
     }
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
-                Article.of(createUserAccount(), "title", "content", "hashtag"),
+                createArticle(),
                 createUserAccount(),
                 content
         );
@@ -174,20 +175,27 @@ class ArticleCommentServiceTest {
 
     private UserAccount createUserAccount() {
         return UserAccount.of(
-                "seungseok",
+                "uno",
                 "password",
-                "seungseok@email.com",
-                "seungseok",
+                "uno@email.com",
+                "Uno",
                 null
         );
     }
 
     private Article createArticle() {
-        return Article.of(
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "#java"
+                "content"
         );
+        article.addHashtags(Set.of(createHashtag(article)));
+
+        return article;
     }
+
+    private Hashtag createHashtag(Article article) {
+        return Hashtag.of("java");
+    }
+
 }
