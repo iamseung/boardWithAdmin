@@ -12,7 +12,6 @@ import java.util.*;
 // INDEX 전략
 @Table(indexes = {
         @Index(columnList = "title"),
-        @Index(columnList = "hashtag"),
         @Index(columnList = "createdAt"),
         @Index(columnList = "modifiedAt")
 })
